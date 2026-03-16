@@ -1,0 +1,85 @@
+* {
+    font: "Hack Nerd Font 10";
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+    outline: none;
+}
+
+configuration {
+    modi: "drun";
+    icon-theme: "Papirus-Dark";
+    show-icons: false;
+    drun-display-format: "{name}";
+    disable-history: true;
+}
+
+@import "shared.rasi"
+
+window {
+    location: center;
+    anchor: center;
+    fullscreen: false;
+    width: 25%;
+    height: 26%;     
+    background-color: #000000;
+    border: 1px;
+    border-color: #353c52;
+}
+
+mainbox {
+    
+    background-color: transparent; 
+    border: 0px;
+}
+
+inputbar {
+    children: [ "entry" ]; 
+    background-color: #000000;
+    text-color: #ffffff;
+    border: 0px 0px 1px 0px; 
+    border-color: #353c52;
+}
+
+entry {
+    expand: true;
+    background-color: transparent;
+    text-color: #ffffff;
+    placeholder-color: #888888;
+    border: 0px;
+    padding: 6px 10px; 
+}
+
+listview {
+    layout: vertical;
+    scrollbar: true; 
+    cursor: default;
+    background-color: #000000;
+    text-color: #ffffff;
+    border: 0px;
+}
+
+scrollbar {
+    handle-width: 4px;
+    handle-color: #afb1db;
+    background-color: #000000;
+    border-radius: 0px; 
+}
+
+element {
+    background-color: transparent;
+    text-color: #ffffff;
+    padding: 4px; 
+    cursor: pointer;
+}
+
+element selected.normal {
+    background-color: #afb1db;
+    text-color: #000000;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+}

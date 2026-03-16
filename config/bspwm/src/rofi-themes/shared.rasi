@@ -1,0 +1,14 @@
+// Rofi colors for Karla
+
+* {
+    font: "JetBrainsMono NF Bold 9";
+    background: #0E1113F7;
+    background-alt: #0E1113F5;
+    gris: #4f506e;
+    foreground: #afb1db;
+    selected: #5884d4;
+    active: #61b33e;
+    urgent: #e71c5b;
+
+    img-background: url("~/.config/bspwm/rices/dark/rofi.webp", width);
+}

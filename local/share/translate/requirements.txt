@@ -1,0 +1,11 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+fastapi
+uvicorn
+pydantic
+transformers
+torch
+sacremoses
+sentencepiece
+requests
+PyQt6

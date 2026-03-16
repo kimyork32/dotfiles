@@ -1,0 +1,118 @@
+#!/bin/bash
+VERSION="0.3"
+
+get_max_refresh_rate() {
+    # $1 = nombre de salida (ej: HDMI-1)
+    # $2 = resolución (ej: 1920x1080)
+    xrandr | sed -n "/^$1 connected/,/^[^ ]/p" | \
+        grep "^   $2" | \
+        grep -oP '\d+\.\d+' | \
+        sort -nr | head -n1
+}
+# Función para obtener la resolución preferida de un monitor
+get_preferred_resolution() {
+    xrandr | grep -A 1 "^$1 connected" | tail -n 1 | awk '{print $1}'
+}
+
+get_common_16_9_resolution() {
+    HDMI_MODES=$(xrandr | grep -A 20 "^HDMI-1 connected" | grep -oP '^\s+\K[0-9]+x[0-9]+' | sort -u)
+    LAPTOP_MODES=$(xrandr | grep -A 20 "^eDP-1 connected" | grep -oP '^\s+\K[0-9]+x[0-9]+' | sort -u)
+
+    comm -12 <(echo "$HDMI_MODES") <(echo "$LAPTOP_MODES") |
+    grep -E '^(1920x1080|1600x900|1366x768|1280x720)' |
+    head -n 1
+}
+
+case "$1" in
+    -v)
+        # Mostrar la versión
+        echo "hdmiconnect version $VERSION"
+        ;;
+    -m)
+        # Cambiar al monitor externo
+        HDMI_RES=$(get_preferred_resolution "HDMI-1")
+        [ -z "$HDMI_RES" ] && HDMI_RES="1920x1080"
+        HDMI_RATE=$(get_max_refresh_rate "HDMI-1" "$HDMI_RES")
+        [ -z "$HDMI_RATE" ] && HDMI_RATE=60
+        echo "Configurando HDMI-1 a ${HDMI_RES} @ ${HDMI_RATE}Hz"
+        xrandr --output HDMI-1 --primary --mode 1920x1080 --rate "$HDMI_RATE" --output eDP-1 --off
+        # Refrescar el bspwm
+        bspc wm -r
+        ;;
+    -l)
+        # Cambiar al monitor de la laptop
+        LAPTOP_RES=$(get_preferred_resolution "eDP-1")
+        [ -z "$LAPTOP_RES" ] && LAPTOP_RES="1366x768"
+        LAPTOP_RATE=$(get_max_refresh_rate "eDP-1" "$LAPTOP_RES")
+        [ -z "$LAPTOP_RATE" ] && LAPTOP_RATE=60
+        xrandr --output eDP-1 --primary --mode 1366x768 --rate "$LAPTOP_RATE" --output HDMI-1 --off
+        # Refrescar el bspwm
+        bspc wm -r
+        ;;
+    -d)
+        # Configurar modo dual
+        HDMI_RES=$(get_preferred_resolution "HDMI-1")
+        LAPTOP_RES=$(get_preferred_resolution "eDP-1")
+        HDMI_RATE=$(get_max_refresh_rate "HDMI-1" "$HDMI_RES")
+        LAPTOP_RATE=$(get_max_refresh_rate "eDP-1" "$LAPTOP_RES")
+        [ -z "$HDMI_RATE" ] && HDMI_RATE=60
+        [ -z "$LAPTOP_RATE" ] && LAPTOP_RATE=60
+        # Configurar monitores lado a lado
+        xrandr --output HDMI-1 --primary --mode "$HDMI_RES" --rate "$HDMI_RATE" \
+               --output eDP-1 --mode "$LAPTOP_RES" --rate "$LAPTOP_RATE" --left-of HDMI-1
+        
+        # Configurar 6 workspaces distribuidos entre los monitores
+        bspc monitor HDMI-1 -d 1 2 3 4 5 6
+        bspc monitor eDP-1 -d 7 8 9 10 11 12
+        
+        # Refrescar bspwm
+        bspc wm -r
+        ;;
+    -c)
+        # Clonar pantalla (modo espejo) usando resolución común 16:9
+        COMMON_RES=$(get_common_16_9_resolution)
+        LAPTOP_RATE=$(get_max_refresh_rate "eDP-1")
+
+        if [ -z "$COMMON_RES" ]; then
+            echo "❌ No se encontró una resolución común con proporción 16:9 entre eDP-1 y HDMI-1."
+            exit 1
+        fi
+
+        xrandr --output HDMI-1 --mode "$COMMON_RES" --rate "$LAPTOP_RATE" --same-as eDP-1 \
+               --output eDP-1 --mode "$COMMON_RES" --rate "$LAPTOP_RATE" --primary
+
+        bspc wm -r
+        ;;
+    -f)
+        # 1. Obtener la lista de frecuencias en un array
+        MAPFILE=($(xrandr | sed -n "/^HDMI-1 connected/,/^[^ ]/p" | grep "1920x1080" | grep -oP '\d+\.\d+'))
+        
+        echo "--- Frecuencias para HDMI-1 (1920x1080) ---"
+        for i in "${!MAPFILE[@]}"; do
+            echo "[$i] ${MAPFILE[$i]} Hz"
+        done
+
+        # 2. Leer la entrada del usuario
+        read -p "Seleccione el índice (0, 1, 2...): " IDX
+
+        # 3. Validar y aplicar
+        if [[ "$IDX" =~ ^[0-9]+$ ]] && [ "$IDX" -lt "${#MAPFILE[@]}" ]; then
+            SELECTED_RATE=${MAPFILE[$IDX]}
+            echo "Configurando a $SELECTED_RATE Hz..."
+            xrandr --output HDMI-1 --mode 1920x1080 --rate "$SELECTED_RATE"
+            bspc wm -r
+        else
+            echo "Error: Selección inválida."
+        fi
+        ;;
+    *)
+        echo "Uso: $0 {-v|-m|-l|-d}"
+        echo "-v: Muestra la versión del script"
+        echo "-m: Cambia al monitor externo"
+        echo "-l: Cambia al monitor de la laptop"
+        echo "-d: Activa modo dual (ambos monitores)"
+        echo "-c: Clona la pantalla de la laptop en el monitor externo"
+        echo "-f: Listar frecuencias disponibles del monitor externo y cambiarlo"
+        exit 1
+        ;;
+esac

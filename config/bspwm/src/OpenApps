@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+WIDGET_DIR="$HOME/.config/bspwm/eww"
+case "$1" in
+    --terminal)
+        alacritty
+        ;;
+    --browser)
+        google-chrome-stable
+        ;;
+    --filemanager)
+        thunar
+        ;;
+    --clipboard)
+        rofi -modi "clipboard:greenclip print" -theme "$HOME"/.config/bspwm/src/rofi-themes/Clipboard.rasi -show clipboard -run-command '{cmd}'
+        ;;
+    --screenshot)
+        ScreenShot
+        ;;
+    --screenshotselect)
+        ScreenShot select
+        ;;
+    --soundcontrol)
+        pavucontrol
+        ;;
+    --netmanager)
+        NetManagerDM
+        ;;
+    --calendar)
+        eww -c "$WIDGET_DIR" open --toggle date
+        ;;
+    --menu)
+        rofi -show drun -theme "$HOME"/.config/bspwm/src/rofi-themes/Launcher.rasi
+        ;;
+    *)
+        echo "invalid option"
+        ;;
+esac

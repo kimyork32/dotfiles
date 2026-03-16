@@ -1,0 +1,70 @@
+* {
+    font: "Hack Nerd Font 10";
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+    outline: none;
+}
+configuration {
+    modi: "drun";
+    icon-theme: "Papirus-Dark";
+    show-icons: false;
+    drun-display-format: "{name}";
+    disable-history: true;
+}
+
+window {
+    location: center;
+    anchor: center;
+    fullscreen: false;
+    width: 150px;
+    height: 90px;
+    background-color: #000000;
+    border: 1px;
+    border-color: #353c52;
+}
+
+
+inputbar {
+    children: [ "entry" ];
+    background-color: #000000;
+    text-color: #ffffff;
+    border: 0px 0px 1px 0px;
+    border-color: #353c52;
+}
+
+textbox-prompt {
+    expand: false;
+    text-color: #ffffff;
+}
+
+entry {
+    expand: true;
+    background-color: transparent;
+    text-color: #ffffff;
+    placeholder-color: #888888;
+    border: 0px;
+}
+
+listview {
+    cursor: default;
+    background-color: #000000;
+    text-color: #ffffff;
+    border: 0px;
+}
+
+element {
+    background-color: transparent;
+    text-color: #ffffff;
+}
+
+element selected.normal {
+    background-color: #afb1db;
+    text-color: #000000;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+}

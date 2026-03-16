@@ -1,0 +1,80 @@
+#!/usr/bin/env bash 
+
+# ========= INSTALLING DEPENDENCIES PACMAN ========================
+dependencies=(nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-joypixels ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl pactl zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim git base-devel gcc unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zen zathura blueman feh qalculate galculator htop mpv okular ranger tree zip glow bash-language-server rsync)
+
+sudo pacman -S --needed --noconfirm "${dependencies[@]}"
+
+
+# ========= INSTALLING YAY AND DEPENDENCIES ======================
+if ! command -v yay &> /dev/null; then
+    tmpdir=$(mktemp -d)
+    git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
+    cd "$tmpdir/yay"
+    makepkg -si --noconfirm
+    cd
+    rm -rf "$tmpdir"
+fi
+
+dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch)
+yay -S --needed --noconfirm "${dependencies_yay[@]}"
+
+
+# ========= PREPARING DIRECTORIES ================================
+if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then 
+    LC_ALL=C xdg-user-dirs-update --force
+fi
+
+
+# ========= CONFIGURING SERVICE ==================================
+systemctl --user enable --now pipewire pipewire-pulse wireplumber
+
+
+# ========= COPY FOLDERS =========================================
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.local/bin"
+mkdir -p "$HOME/.local/share"
+
+rsync -a ./config/. "$HOME/.config"
+rsync -a ./local/share/. "$HOME/.local/share"
+rsync -a ./local/bin/. "$HOME/.local/bin"
+rsync -a ./fonts "$HOME/.local/share"
+rsync -a ./.zshrc "$HOME"
+fc-cache -rv
+
+# ========= SPOTIFY =========================================
+if [ -d /opt/spotify ]; then
+    sudo chmod a+wr /opt/spotify
+    sudo chmod -R a+wr /opt/spotify/Apps
+fi
+spicetify backup apply
+spicetify config current_theme text
+spicetify config color_scheme Dark
+spicetify config extensions adblock.js
+spicetify config custom_apps marketplace
+
+
+# ========= GREETER ========================================
+while true; do
+    read -rp "do you want to install greeter sddm with the berserk theme?" yn
+    case $yn in
+        [Yy]* ) break ;;
+        [Nn]* ) exit ;;
+        * ) printf " error: just write 'y' or 'n'\n\n" ;;
+    esac
+done
+
+sudo systemctl disable display-manager
+sudo systemctl enable sddm
+
+sudo mkdir -p /usr/share/sddm
+sudo mkdir -p /usr/share/sddm/themes
+
+sudo rsync -a ./share-root/sddm/theme/berserk-theme /usr/share/sddm/themes
+sudo rsync ./share-root/sddm.conf /etc/
+
+
+# ===== CHANGE SHELL BASH TO ZSH ==========================
+chsh -s "$(command -v zsh)"
+
+
