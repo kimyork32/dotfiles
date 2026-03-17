@@ -1,0 +1,33 @@
+#!/bin/bash
+
+EWW_CAL_CONFIG="$HOME/.config/bspwm/eww/calendar/calendar.yuck"
+POLYBAR_CONFIG="$HOME/.config/bspwm/rice/config.ini"
+NET_CONFIG="$HOME/.config/bspwm/src/rofi-themes/NetManagerDM.rasi"
+
+is_bottom="$(sed -n '/\[bar\/dark\]/,/\[/p' "$POLYBAR_CONFIG" | grep '^bottom =' | cut -d' ' -f3)"
+
+if [ $is_bottom == "true" ]; then 
+    POLYBAR_BOTTOM="false"
+    CALENDAR_ANCHOR="top center"
+    CALENDAR_X_OFFSET="0%"
+    CALENDAR_Y_OFFSET="7%"
+    NET_Y_OFFSET="32px"
+    NET_LOCATION="northeast"
+
+else 
+    POLYBAR_BOTTOM="true"
+    CALENDAR_ANCHOR="bottom right"
+    CALENDAR_X_OFFSET="-1%"
+    CALENDAR_Y_OFFSET="-3.7%"
+    NET_Y_OFFSET="-32px"
+    NET_LOCATION="southeast"
+fi
+
+sed -i "s/^bottom = .*/bottom = $POLYBAR_BOTTOM/" "$POLYBAR_CONFIG"
+sed -i -E "s/:anchor\s+\"[^\"]+\"/:anchor \"$CALENDAR_ANCHOR\"/" "$EWW_CAL_CONFIG"
+sed -i -E "s/:x\s+\"[^\"]+\"/:x \"$CALENDAR_X_OFFSET\"/" "$EWW_CAL_CONFIG"
+sed -i -E "s/:y\s+\"[^\"]+\"/:y \"$CALENDAR_Y_OFFSET\"/" "$EWW_CAL_CONFIG"
+sed -i -E "/^window\s*\{/,/\}/ s/location:\s+.*/location: $NET_LOCATION;/" "$NET_CONFIG"
+sed -i -E "/^window\s*\{/,/\}/ s/y-offset:\s+.*/y-offset: $NET_Y_OFFSET;/" "$NET_CONFIG"
+
+bspc wm -r

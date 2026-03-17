@@ -19,7 +19,7 @@ window {
     padding:                     0px;
     border:                      1px solid;
     border-radius:               0px;
-    border-color:                @selected;
+    border-color:                @gris;
     cursor:                      "default";
     background-color:            @background;
 }
@@ -39,7 +39,7 @@ inputbar {
     padding:                     0px;
     border:                      0px;
     border-radius:               0px;
-    border-color:                @selected;
+    border-color:                @gris;
     background-color:            transparent;
     text-color:                  @foreground;
     children:                    [ "textbox-prompt-colon", "prompt"];
@@ -60,7 +60,7 @@ prompt {
     enabled:                     true;
     padding:                     10px;
     border-radius:               0px;
-    background-color:            @selected;
+    background-color:            @gris;
     text-color:                  @background;
 }
 
@@ -70,7 +70,7 @@ message {
     padding:                     5px;
     border:                      0px solid;
     border-radius:               0px;
-    border-color:                @selected;
+    border-color:                @gris;
     background-color:            @background-alt;
     text-color:                  @foreground;
 }
@@ -97,9 +97,9 @@ listview {
 element {
     enabled:                     true;
     padding:                     0px 0px 0px 0px;
-    border:                      0px solid;
+    border:                      1px solid;
     border-radius:               0px;
-    border-color:                @selected;
+    border-color:                @gris;
     background-color:            transparent;
     text-color:                  @foreground;
     cursor:                      pointer;
@@ -116,28 +116,28 @@ element-text {
 
 element normal.normal,
 element alternate.normal {
-    border:                      1px solid;
+    border:                      0px solid;
     border-radius:               0px;
-    border-color:                @selected;
+    border-color:                @gris;
     background-color:            @background;
     text-color:                  @foreground;
 }
 
 element normal.urgent,
 element alternate.urgent,
-element selected.active {
+element gris.active {
     background-color:            @urgent;
     text-color:                  @background;
 }
 
 element normal.active,
 element alternate.active,
-element selected.urgent {
+element gris.urgent {
     background-color:            @active;
     text-color:                  @background;
 }
 
-element selected.normal {
-    background-color:            @selected;
+element gris.normal {
+    background-color:            @gris;
     text-color:                  @background;
 }

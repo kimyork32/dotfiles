@@ -37,4 +37,4 @@ xset r rate 250 33 &
 vmware-user-suid-wrapper & #eliminar esto, es para copiar y pegar contenido de la vmware a la pc fisica
 pidof -q dunst || { dunst & }
 pidof -q greenclip || { greenclip daemon & }
-
+pidof -q eww || { eww -c "${HOME}"/.config/bspwm/eww daemon & }

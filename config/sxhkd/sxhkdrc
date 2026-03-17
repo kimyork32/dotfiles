@@ -164,3 +164,6 @@ super + d
 # Kill translate daemon
 ctrl + super + alt + d
     pkill -f "uvicorn server:app"
+
+super + alt + d
+    ChangePolybarPos

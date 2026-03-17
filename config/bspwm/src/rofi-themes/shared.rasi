@@ -2,9 +2,10 @@
 
 * {
     font: "JetBrainsMono NF Bold 9";
-    background: #0E1113F7;
+    // background: #0E1113F7;
+    background: #000000;
     background-alt: #0E1113F5;
-    gris: #4f506e;
+    gris: #353c52;
     foreground: #afb1db;
     selected: #5884d4;
     active: #61b33e;
