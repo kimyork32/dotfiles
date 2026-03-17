@@ -1,7 +1,7 @@
 #!/usr/bin/env bash 
 
 # ========= INSTALLING DEPENDENCIES PACMAN ========================
-dependencies=(gcc git base-devel nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl pactl zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate galculator htop mpv okular ranger tree zip glow bash-language-server rsync firefox)
+dependencies=(gcc git base-devel nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate-gtk galculator htop mpv okular ranger tree zip glow bash-language-server rsync firefox)
 
 sudo pacman -S --needed --noconfirm "${dependencies[@]}"
 
