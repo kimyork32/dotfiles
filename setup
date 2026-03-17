@@ -1,5 +1,7 @@
 #!/usr/bin/env bash 
 
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # ========= INSTALLING DEPENDENCIES PACMAN ========================
 dependencies=(gcc git base-devel nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate-gtk galculator htop mpv okular ranger tree zip glow bash-language-server rsync firefox)
 
@@ -12,7 +14,7 @@ if ! command -v yay &> /dev/null; then
     git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
     cd "$tmpdir/yay"
     makepkg -si --noconfirm
-    cd
+    cd "$DOTFILES_DIR"
     rm -rf "$tmpdir"
 fi
 
@@ -35,11 +37,11 @@ mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.local/bin"
 mkdir -p "$HOME/.local/share"
 
-rsync -a ./config/. "$HOME/.config"
-rsync -a ./local/share/. "$HOME/.local/share"
-rsync -a ./local/bin/. "$HOME/.local/bin"
-rsync -a ./fonts "$HOME/.local/share"
-rsync -a ./.zshrc "$HOME"
+rsync -a "$DOTFILES_DIR/config/." "$HOME/.config"
+rsync -a "$DOTFILES_DIR/local/share/." "$HOME/.local/share"
+rsync -a "$DOTFILES_DIR/local/bin/." "$HOME/.local/bin"
+rsync -a "$DOTFILES_DIR/fonts" "$HOME/.local/share"
+rsync -a /.zshrc "$HOME"
 fc-cache -rv
 
 # ========= SPOTIFY =========================================
@@ -47,6 +49,8 @@ if [ -d /opt/spotify ]; then
     sudo chmod a+wr /opt/spotify
     sudo chmod -R a+wr /opt/spotify/Apps
 fi
+mkdir -p "$HOME/.config/spotify"
+touch "$HOME/.config/spotify/prefs"
 spicetify backup apply
 spicetify config current_theme text
 spicetify config color_scheme Dark
@@ -70,8 +74,8 @@ sudo systemctl enable sddm
 sudo mkdir -p /usr/share/sddm
 sudo mkdir -p /usr/share/sddm/themes
 
-sudo rsync -a ./share-root/sddm/theme/berserk-theme /usr/share/sddm/themes
-sudo rsync ./share-root/sddm.conf /etc/
+sudo rsync -a "$DOTFILES_DIR/share-root/sddm/theme/berserk-theme" /usr/share/sddm/themes
+sudo rsync "$DOTFILES_DIR/share-root/sddm.conf" /etc/
 
 
 # ===== CHANGE SHELL BASH TO ZSH ==========================
