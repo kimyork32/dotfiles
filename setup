@@ -60,7 +60,7 @@ spicetify config custom_apps marketplace
 
 # ========= GREETER ========================================
 while true; do
-    read -rp "do you want to install greeter sddm with the berserk theme?" yn
+    read -rp "do you want to install greeter sddm with the berserk theme?[y/n]: " yn
     case $yn in
         [Yy]* ) break ;;
         [Nn]* ) exit ;;
