@@ -83,7 +83,7 @@ spicetify config custom_apps marketplace
 # ========= GREETER ========================================
 bnr "SETTING UP GREETER"
 while true; do
-    read -rp "do you want to install greeter sddm with the berserk theme?[y/n]: " yn
+    read -rp "do you want to install greeter sddm with the berserk theme? [y/n]: " yn
     case $yn in
         [Yy]* ) break ;;
         [Nn]* ) exit ;;
@@ -102,6 +102,10 @@ sudo rsync "$DOTFILES_DIR/share-root/sddm.conf" /etc/
 
 
 # ===== CHANGE SHELL BASH TO ZSH ==========================
+bnr "CHANGE SHELL BASH TO ZSH"
 chsh -s "$(command -v zsh)"
+
+bnr "FINISH"
+printf "please, reboot your SO"
 
 
