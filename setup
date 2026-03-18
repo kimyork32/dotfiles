@@ -9,7 +9,7 @@ bnr() {
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ========= INSTALLING DEPENDENCIES PACMAN ========================
-dependencies=(gcc git base-devel nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl NetworkManager zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate-gtk galculator htop mpv okular ranger tree zip glow bash-language-server rsync xorg-xsetroot xorg-xset firefox)
+dependencies=(base-devel gcc git nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl networkmanager zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate-gtk galculator htop mpv okular ranger tree zip glow bash-language-server rsync xorg-xsetroot xorg-xset firefox)
 
 bnr "INSTALLING DEPENDENCIES WITH PACMAN"
 sudo pacman -S --needed --noconfirm "${dependencies[@]}"
@@ -43,6 +43,7 @@ fi
 # ========= CONFIGURING SERVICES =================================
 bnr "SETTING UP SERVICES"
 systemctl --user enable --now pipewire pipewire-pulse wireplumber
+sudo systemctl disable --now dhcpcd netctl systemd-networkd iwd
 systemctl enable NetworkManager
 
 # ========= COPY FOLDERS =========================================
