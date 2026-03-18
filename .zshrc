@@ -53,5 +53,6 @@ if [ -d "$HOME/.local/bin" ]; then
 fi
 alias ls='eza --color=always -a'
 alias ll='eza --color=always -la'
+alias ..='cd ..'
 
 alias translate='$HOME/.local/share/translate/launcher.sh'

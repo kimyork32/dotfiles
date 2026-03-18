@@ -1,14 +1,22 @@
 #!/usr/bin/env bash 
 
+bnr() {
+    printf -v _b "%80s" ""
+    set -- "${1:0:24}"
+    printf "\n%s\n==%*s%s%*s==\n%s\n\n" "${_b// /=}" $((38-${#1}/2)) "" "$1" $((38-(${#1}+1)/2)) "" "${_b// /=}"
+}
+
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ========= INSTALLING DEPENDENCIES PACMAN ========================
-dependencies=(gcc git base-devel nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate-gtk galculator htop mpv okular ranger tree zip glow bash-language-server rsync firefox)
+dependencies=(gcc git base-devel nano sxhkd alacritty xorg-xrandr polybar ttf-inconsolata ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd ttf-font-awesome xclip pavucontrol pipewire pipewire-pulse pipewire-alsa wireplumber playerctl NetworkManager zsh zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search eza neovim unzip wget curl ripgrep fd python-pip python-black nodejs npm shfmt thunar mousepad dunst libnotify python-gobject rofi xdg-user-dirs maim sddm qt6-svg qt6-virtualkeyboard qt6-multimedia qt6-declarative gst-libav netcat zathura blueman feh qalculate-gtk galculator htop mpv okular ranger tree zip glow bash-language-server rsync xorg-xsetroot xorg-xset firefox)
 
+bnr "INSTALLING DEPENDENCIES WITH PACMAN"
 sudo pacman -S --needed --noconfirm "${dependencies[@]}"
 
 
 # ========= INSTALLING YAY AND DEPENDENCIES ======================
+bnr "INSTALLING YAY"
 if ! command -v yay &> /dev/null; then
     tmpdir=$(mktemp -d)
     git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
@@ -18,11 +26,13 @@ if ! command -v yay &> /dev/null; then
     rm -rf "$tmpdir"
 fi
 
-dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch)
+bnr "INSTALLING DEPENDENCIES WITH YAY"
+dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch eww)
 yay -S --needed --noconfirm "${dependencies_yay[@]}"
 
 
 # ========= PREPARING DIRECTORIES ================================
+bnr "INSTALLING DEPENDENCIES WITH YAY"
 if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then 
     LC_ALL=C xdg-user-dirs-update --force
 fi
@@ -30,19 +40,25 @@ fi
 
 # ========= CONFIGURING SERVICE ==================================
 systemctl --user enable --now pipewire pipewire-pulse wireplumber
-
+systemctl enable NetworkManager
 
 # ========= COPY FOLDERS =========================================
 mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.local/bin"
 mkdir -p "$HOME/.local/share"
+mkdir -p "$HOME/.local/share/fonts"
 
 rsync -a "$DOTFILES_DIR/config/." "$HOME/.config"
 rsync -a "$DOTFILES_DIR/local/share/." "$HOME/.local/share"
 rsync -a "$DOTFILES_DIR/local/bin/." "$HOME/.local/bin"
-rsync -a "$DOTFILES_DIR/fonts" "$HOME/.local/share"
-rsync -a /.zshrc "$HOME"
+rsync -a "$DOTFILES_DIR/fonts/home/." "$HOME/.local/share/fonts"
+rsync -a "$DOTFILES_DIR/.zshrc" "$HOME"
+
+sudo mkdir -p "/usr/share/fonts"
+sudo rsync -a "$DOTFILES_DIR/fonts/root/." "/usr/share/fonts"
+
 fc-cache -rv
+sudo fc-cache -rv
 
 # ========= SPOTIFY =========================================
 if [ -d /opt/spotify ]; then
