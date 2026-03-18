@@ -31,6 +31,7 @@ pkill -f SpotifyNotification.sh
 # ==================================================================
 
 xsetroot -cursor_name left_ptr &
+xsetroot -solid "#000000" &
 pidof -q sxhkd || { sxhkd & }
 setxkbmap latam &
 xset r rate 250 33 &

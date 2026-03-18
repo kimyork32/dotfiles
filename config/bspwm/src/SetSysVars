@@ -2,16 +2,15 @@
 
 CONFIG_FILE="$HOME/.config/bspwm/src/system.ini"
 SFILE="$HOME/.config/bspwm/src/.sys"
-[[ -f "$SFILE" ]] && exit 0
 function setup_system_vars() {
 	PRIMARY_NET=$(ip -o route get 1 | awk '{print $5; exit}')
-    [[ -n "$PRIMARY_NET" ]] && sed -i "s/sys_network_interface = .*/sys_network_interface = $PRIMARY_NET/" "$CONFIG_FILE"
+    [[ -n "$PRIMARY_NET" ]] && sed -i "s/^sys_network_interface.*/sys_network_interface = $PRIMARY_NET/" "$CONFIG_FILE"
     CARD=$(find /sys/class/backlight -maxdepth 1 -type l | head -n1 | xargs basename)
-    [[ -n "$CARD" ]] && sed -i "s/sys_graphics_card = .*/sys_graphics_card = $CARD/" "$CONFIG_FILE"
+    [[ -n "$CARD" ]] && sed -i "s/^sys_graphics_card.*/sys_graphics_card = $CARD/" "$CONFIG_FILE"
     BATTERY=$(find /sys/class/power_supply -maxdepth 1 -type l -name "BAT*" | head -n1 | xargs basename)
     ADAPTER=$(find /sys/class/power_supply -maxdepth 1 -type l -name "A[CD]*" | head -n1 | xargs basename)
-    [[ -n "$BATTERY" ]] && sed -i "s/sys_battery = .*/sys_battery = $BATTERY/" "$CONFIG_FILE"
-    [[ -n "$ADAPTER" ]] && sed -i "s/sys_adapter = .*/sys_adapter = $ADAPTER/" "$CONFIG_FILE"
+    [[ -n "$BATTERY" ]] && sed -i "s/^sys_battery.*/sys_battery = $BATTERY/" "$CONFIG_FILE"
+    [[ -n "$ADAPTER" ]] && sed -i "s/^sys_adapter.*/sys_adapter = $ADAPTER/" "$CONFIG_FILE"
 }
 setup_system_vars
 touch "$SFILE"
