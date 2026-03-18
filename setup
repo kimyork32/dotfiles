@@ -27,9 +27,11 @@ if ! command -v yay &> /dev/null; then
 fi
 
 bnr "INSTALLING DEPENDENCIES WITH YAY"
-dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch eww)
+dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch)
 yay -S --needed --noconfirm "${dependencies_yay[@]}"
 
+bnr "INSTALLING EWW"
+yay -S --needed --noconfirm eww
 
 # ========= PREPARING DIRECTORIES ================================
 bnr "INSTALLING DEPENDENCIES WITH YAY"
@@ -38,11 +40,13 @@ if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then
 fi
 
 
-# ========= CONFIGURING SERVICE ==================================
+# ========= CONFIGURING SERVICES =================================
+bnr "SETTING UP SERVICES"
 systemctl --user enable --now pipewire pipewire-pulse wireplumber
 systemctl enable NetworkManager
 
 # ========= COPY FOLDERS =========================================
+bnr "CREATING AND COPY FOLDERS"
 mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.local/bin"
 mkdir -p "$HOME/.local/share"
@@ -61,6 +65,7 @@ fc-cache -rv
 sudo fc-cache -rv
 
 # ========= SPOTIFY =========================================
+bnr "SETTING UP SPOTIFY"
 if [ -d /opt/spotify ]; then
     sudo chmod a+wr /opt/spotify
     sudo chmod -R a+wr /opt/spotify/Apps
@@ -75,6 +80,7 @@ spicetify config custom_apps marketplace
 
 
 # ========= GREETER ========================================
+bnr "SETTING UP GREETER"
 while true; do
     read -rp "do you want to install greeter sddm with the berserk theme?[y/n]: " yn
     case $yn in
