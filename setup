@@ -79,33 +79,48 @@ spicetify config color_scheme Dark
 spicetify config extensions adblock.js
 spicetify config custom_apps marketplace
 
+# ===== CHANGING SHELL BASH TO ZSH ==========================
+bnr "CHANGE SHELL BASH TO ZSH"
+chsh -s "$(command -v zsh)"
 
 # ========= GREETER ========================================
 bnr "SETTING UP GREETER"
 while true; do
     read -rp "do you want to install greeter sddm with the berserk theme? [y/n]: " yn
     case $yn in
-        [Yy]* ) break ;;
-        [Nn]* ) exit ;;
+        [Yy]* )
+            sudo systemctl disable display-manager
+            sudo systemctl enable sddm
+            sudo mkdir -p /usr/share/sddm
+            sudo mkdir -p /usr/share/sddm/themes
+            sudo rsync -a "$DOTFILES_DIR/share-root/sddm/theme/berserk-theme" /usr/share/sddm/themes
+            sudo cp "$DOTFILES_DIR/share-root/sddm.conf" /etc/sddm.conf
+            break
+            ;;
+        [Nn]* ) break ;;
         * ) printf " error: just write 'y' or 'n'\n\n" ;;
     esac
 done
 
-sudo systemctl disable display-manager
-sudo systemctl enable sddm
-
-sudo mkdir -p /usr/share/sddm
-sudo mkdir -p /usr/share/sddm/themes
-
-sudo rsync -a "$DOTFILES_DIR/share-root/sddm/theme/berserk-theme" /usr/share/sddm/themes
-sudo rsync "$DOTFILES_DIR/share-root/sddm.conf" /etc/
 
 
-# ===== CHANGE SHELL BASH TO ZSH ==========================
-bnr "CHANGE SHELL BASH TO ZSH"
-chsh -s "$(command -v zsh)"
+# ===== CHANGING DEFAULT BROWSER TO ZEN ======================
+bnr "CHANGING DEFAULT BROWSER"
+if ls ~/.local/share/applications | grep -i "zen"; then 
+    while true; do
+        read -rp "do you want to change default browser to Zen? [y/n]: " yn
+        case $yn in
+            [Yy]* )  
+                unset BROWSER
+                xdg-settings set default-web-browser ZenBrowser.desktop
+                break
+                ;;
+            [Nn]* ) exit ;;
+            * ) printf " error: just write 'y' or 'n'\n\n" ;;
+        esac
+    done
+fi
 
 bnr "FINISH"
 printf "please, reboot your OS\n"
-
 
