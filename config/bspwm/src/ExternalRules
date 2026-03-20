@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+wid=$1
+class=$2
+instance=$3
+consequences=$4
+
+result() {
+    eval "$consequences"
+    [ "$state" ] || echo "$1"
+}
+
+case "$class" in
+    FloaTerm)
+        result "state=floating center=on"
+        ;;
+    mpv)
+        result "state=floating focus=on rectangle=849x477+0+0 center=on"
+        ;;
+    whatsdesk|TelegramDesktop)
+        result "desktop=^4 state=tiled follow=on"
+        ;;
+    retroarch)
+        result "state=pseudo_tiled desktop=^6"
+        ;;
+    pavucontrol)
+        result "state=floating center=on"
+        ;;
+    Spotify)
+        result "state=tiled desktop=^6 follow=on"
+        ;;
+    Mousepad)
+        result "state=floating rectangle=600x400+0+0 center=on"
+        ;;
+    Blueman-manager)
+        result "state=floating rectangle=849x477+0+0 center=on"
+        ;;
+esac
+
+case "$instance" in
+    Toolkit)
+        result "state=floating sticky=on rectangle=500x290+1054+593"
+        ;;
+esac
