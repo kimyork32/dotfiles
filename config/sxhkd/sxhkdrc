@@ -9,8 +9,8 @@ super + @space
     OpenApps --menu
 
 # Apps (browser, editor, obsidian)
-shift + alt + {b,n,s,m}
-	OpenApps {--browser,--filemanager,spotify,mousepad}
+shift + alt + {b,n,s,m,w}
+	OpenApps {--browser,--filemanager,spotify,mousepad,whatsdesk}
 
 shift + super + alt + n
     alacritty -e ranger

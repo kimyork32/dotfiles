@@ -27,7 +27,7 @@ if ! command -v yay &> /dev/null; then
 fi
 
 bnr "INSTALLING DEPENDENCIES WITH YAY"
-dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch)
+dependencies_yay=(spotify spicetify-cli rofi-greenclip neofetch whatsdesk)
 yay -S --needed --noconfirm "${dependencies_yay[@]}"
 
 bnr "INSTALLING EWW"
@@ -106,6 +106,6 @@ bnr "CHANGE SHELL BASH TO ZSH"
 chsh -s "$(command -v zsh)"
 
 bnr "FINISH"
-printf "please, reboot your SO"
+printf "please, reboot your OS\n"
 
 
