@@ -20,20 +20,12 @@ return {
         config = function()
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-            local lspconfig = require("lspconfig")
-            lspconfig.bashls.setup({
-                capabilities = capabilities,
-            })
-            lspconfig.cssls.setup({
-                capabilities = capabilities,
-            })
-            lspconfig.lua_ls.setup({
-                capabilities = capabilities,
-            })
-            lspconfig.clangd.setup({
-                capabilities = capabilities,
-            })
-
+            local servers = { "bashls", "cssls", "lua_ls", "clangd" }
+            for _, server in ipairs(servers) do
+                -- La nueva API nativa en Neovim v0.11+
+                vim.lsp.config(server, { capabilities = capabilities })
+                vim.lsp.enable(server)
+            end
 
             vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
             vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, { desc = "Declaration" })
@@ -43,5 +35,4 @@ return {
             vim.keymap.set("n", "<leader>gf", vim.lsp.buf.format, { desc = "Format your code" })
         end,
     },
-
 }
